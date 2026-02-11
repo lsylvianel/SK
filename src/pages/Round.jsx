@@ -3,44 +3,86 @@ import { Container, Typography, Button, Table, TableBody, TableCell, TableHead, 
 import { useNavigate } from 'react-router-dom'; // to go back = TGB
 import { IconButton, Box } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import NumberSpinner from '../components/NumberSpinner';
 
 function Round({ players }) {
   const navigate = useNavigate(); // TGB
-  const [manche, setManche] = useState(1);
-  // On crée un objet pour stocker les scores : { "Joueur 1": 0, "Joueur 2": 0 }
-  const [scores, setScores] = useState(
-    players.reduce((acc, p) => ({ ...acc, [p]: 0 }), {})
+
+  const [round, setRound] = useState(1); // round 1, 2 ...10
+  const [step, setStep] = useState('bet'); // state of the round
+  const [scoreboard, setScoreboard] = useState(
+    players.reduce((acc, p) => ({ ...acc, [p]: 0 }), {}) // scoreboard { "player 1":0, "player 2":0 }
+  );
+  const [values, setValues] = useState(
+    players.reduce((acc, p) => ({ ...acc, [p]: 0 }), {}) // bet display on spinner
+  ); 
+  const [bets, setBets] = useState(
+    players.reduce((acc, p) => ({ ...acc, [p]: 0 }), {}) // bet for each player
+  );
+  const [results, setResults] = useState(
+    players.reduce((acc, p) => ({ ...acc, [p]: 0 }), {}) // result for each player
   );
 
   const validateRound = () => {
-    if (manche < 10) {
-      setManche(manche + 1);
+    if (step == 'bet') {
+      setStep('result');
+      setBets(values)
+      setValues({}); // empty bets
+    } else {
+      setValues({}); // empty bets
+      calculate(bets, results);
+      nextRound();
+    }
+  };
+
+  const validateBets = (player, itsBet) => {
+    setValues({
+      ...values,
+      [player]: itsBet
+    })
+  }
+
+  const calculate = (parisManche, resultatsManche) => {
+    const newScoreboard = { ...scoreboard };
+    players.forEach((player) => {
+      const bet = parisManche[player];
+      const done = resultatsManche[player];
+
+      if (bet == done) {
+        newScoreboard[player] += 10 * round * done ;
+      } else {
+        newScoreboard[player] -= 10 * round * done ;
+      }
+    });
+    
+    setScoreboard(newScoreboard);
+  };
+
+  const nextRound = () => {
+    if (round < 10) {
+      setRound(round + 1);
+      setStep('bet');
     } else {
       navigate('/end');
     }
-    // Ici on ajoutera plus tard la logique pour saisir les points
-    // il faudrait un petit bouton pour quitter si on veut abandonner la partie?
   };
 
   return (
     <Container sx={{ mt: 5 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-  <IconButton onClick={() => navigate(-1)} color="primary">
-    <ArrowBackIcon />
-  </IconButton>
-  <Typography variant="h6">Configuration</Typography>
-</Box>
-        <Button 
+      {/* Button to go back */}
+      <Button 
         startIcon={<ArrowBackIcon />} 
-        onClick={() => navigate(-1)} // 3. "-1" signifie "recule d'une page"
+        onClick={() => navigate(-1)}
         sx={{ mb: 2 }}
       >
-        Retour
+      Retour
       </Button>
+
       <Typography variant="h4" align="center" gutterBottom>
-        Manche {manche}
+        Manche {round}
       </Typography>
 
+      {/* Les résultats globaux */}
       <Paper elevation={3} sx={{ mt: 3 }}>
         <Table>
           <TableHead>
@@ -53,20 +95,39 @@ function Round({ players }) {
             {players.map((p) => (
               <TableRow key={p}>
                 <TableCell>{p}</TableCell>
-                <TableCell align="right">{scores[p]}</TableCell>
+                <TableCell align="right">{scoreboard[p]}</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </Paper>
 
+      <Typography gutterBottom align="center">
+        <br />{step === 'bet' ? "Les Paris" : "Résultats"}
+      </Typography>
+
+      {/* On boucle sur les joueurs pour afficher les spinners */}
+    <Box sx={{ my: 3 }}>
+      {players.map((player) => (
+        <NumberSpinner 
+          key={player}
+          label={player}
+          value={values[player] || 0}
+          bet={bets[player] || 0}
+          step={step}
+          onChange={(val) => validateBets(player, val) }
+        />
+      ))}
+    </Box>
+
+    {/* Ton bouton unique qui gère tout */}
       <Button 
         variant="contained" 
         fullWidth 
         sx={{ mt: 4 }} 
         onClick={validateRound}
       >
-        {manche < 10 ? `Terminer la manche ${manche}` : "Fin de la partie"}
+        {step === 'bet' ? "Valider les paris" : "Valider les résultats"}
       </Button>
     </Container>
   );

@@ -11,6 +11,8 @@ function AddPlayers({ players, setPlayers }) {
     if (name.trim() !== "") {
       setPlayers([...players, name]);
       setName(''); // Clear the new field
+      // only 8 players max
+      // possibility to delete a player
     }
   };
 

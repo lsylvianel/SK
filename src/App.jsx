@@ -12,7 +12,7 @@ function App() {
         <Routes>
            <Route path="/"  element={<StartParty />} />
            <Route path="/players"  element={<AddPlayers players={players} setPlayers={setPlayers} />} />
-           <Route path="/round"  element={<Round players={players} />} />
+           <Route path="/round"  element={<Round players={players} setPlayers={setPlayers} />} />
            <Route path="/start"  element={<StartParty />} />
            <Route path="/end"  element={<EndParty players={players} setPlayers={setPlayers} />} />
         </Routes>
