@@ -19,39 +19,49 @@ function Round({ players }) {
   const [bets, setBets] = useState(
     players.reduce((acc, p) => ({ ...acc, [p]: 0 }), {}) // bet for each player
   );
-  const [results, setResults] = useState(
-    players.reduce((acc, p) => ({ ...acc, [p]: 0 }), {}) // result for each player
-  );
+  
+  const resetValues = () => {
+    return players.reduce((acc, p) => ({ ...acc, [p]: 0 }), {});
+  };
 
   const validateRound = () => {
     if (step == 'bet') {
       setStep('result');
       setBets(values)
-      setValues({}); // empty bets
+      setValues(resetValues()); // empty bets
     } else {
-      setValues({}); // empty bets
-      calculate(bets, results);
+      setValues(resetValues());
+      calculate(values);
       nextRound();
     }
   };
 
-  const validateBets = (player, itsBet) => {
+  const validateValues = (player, itsBet) => {
     setValues({
       ...values,
       [player]: itsBet
     })
   }
 
-  const calculate = (parisManche, resultatsManche) => {
+  const calculate = (val) => {
     const newScoreboard = { ...scoreboard };
     players.forEach((player) => {
-      const bet = parisManche[player];
-      const done = resultatsManche[player];
+      const bet = bets[player];
+      var done = val[player];
 
+      console.log("("+round+") "+"bet : "+bet+" done : "+done);
       if (bet == done) {
+        if (bet == 0 && done == 0) {
+          done = 1;
+        }
         newScoreboard[player] += 10 * round * done ;
+        console.log("("+round+") "+player+" (+) : "+newScoreboard[player]);
       } else {
+        if (done == 0) {
+          done = 1;
+        }
         newScoreboard[player] -= 10 * round * done ;
+        console.log("("+round+") "+player + " (-) : "+newScoreboard[player]);
       }
     });
     
@@ -103,7 +113,7 @@ function Round({ players }) {
       </Paper>
 
       <Typography gutterBottom align="center">
-        <br />{step === 'bet' ? "Les Paris" : "Résultats"}
+        <br />{step === 'bet' ? "Contrat" : "Résultats"}
       </Typography>
 
       {/* On boucle sur les joueurs pour afficher les spinners */}
@@ -115,7 +125,7 @@ function Round({ players }) {
           value={values[player] || 0}
           bet={bets[player] || 0}
           step={step}
-          onChange={(val) => validateBets(player, val) }
+          onChange={(val) => validateValues(player, val) }
         />
       ))}
     </Box>
