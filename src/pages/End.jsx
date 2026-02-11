@@ -1,19 +1,46 @@
 import React, { useState } from 'react';
-import { Container, Button } from '@mui/material';
+import { Container, Button, Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@mui/material';
 import  { Link } from 'react-router-dom'
 
-function EndParty({ players }) {
-  const [manche, setManche] = useState(1);
-  // On crée un objet pour stocker les scores : { "Joueur 1": 0, "Joueur 2": 0 }
-  const [scores, setScores] = useState(
-    players.reduce((acc, p) => ({ ...acc, [p]: 0 }), {})
-  );
+function EndGame({ players, scoreboard }) {
+  const rankedPlayers = players
+  .map(name => ({
+    name: name,
+    score: scoreboard[name] || 0
+  }))
+  .sort((a, b) => b.score - a.score);
 
-  return (
-
-    // scores array
-    
+  return (    
     <Container sx={{ textAlign: 'center', mt: 10 }}>
+      {/* Game ranking */}
+      <Paper elevation={3} sx={{ mt: 3 }}>
+        <Table>
+          <TableHead>
+            <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
+              <TableCell align="center"><strong>Rang</strong></TableCell>
+              <TableCell><strong>Joueur</strong></TableCell>
+              <TableCell align="right"><strong>Score</strong></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rankedPlayers.map((player, index) => (
+              <TableRow key={player.name}>
+                {/* Le rang est l'index + 1 */}
+                <TableCell align="center">
+                  {index === 0 ? "🥇 1e" : index === 1 ? "🥈 2e" : index === 2 ? "🥉 3e" : index + 1 + "e"}
+                </TableCell>
+                <TableCell sx={{ fontWeight: index === 0 ? 'bold' : 'normal' }}>
+                  {player.name}
+                </TableCell>
+                <TableCell align="right" sx={{ fontWeight: 'bold' }}>
+                  {player.score}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Paper>
+
       <Button 
         variant="contained" component={Link}
         to="/start"
@@ -25,4 +52,4 @@ function EndParty({ players }) {
   );
 }
 
-export default EndParty;
+export default EndGame;

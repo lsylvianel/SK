@@ -3,7 +3,7 @@ import { Button, Container, Stack } from '@mui/material';
 import { Link } from 'react-router-dom';
 import logo from '../assets/SK_logo.jpg';
 
-function StartParty() {
+function StartGame() {
   return (
     <Container sx={{ textAlign: 'center', mt: 10 }}>
       {/* Display logo */}
@@ -26,4 +26,4 @@ function StartParty() {
   );
 }
 
-export default StartParty;
+export default StartGame;

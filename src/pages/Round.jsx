@@ -5,14 +5,12 @@ import { IconButton, Box } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import NumberSpinner from '../components/NumberSpinner';
 
-function Round({ players }) {
+function Round({ players , scoreboard, setScoreboard}) {
   const navigate = useNavigate(); // TGB
 
   const [round, setRound] = useState(1); // round 1, 2 ...10
   const [step, setStep] = useState('bet'); // state of the round
-  const [scoreboard, setScoreboard] = useState(
-    players.reduce((acc, p) => ({ ...acc, [p]: 0 }), {}) // scoreboard { "player 1":0, "player 2":0 }
-  );
+
   const [values, setValues] = useState(
     players.reduce((acc, p) => ({ ...acc, [p]: 0 }), {}) // bet display on spinner
   ); 
@@ -44,28 +42,30 @@ function Round({ players }) {
   }
 
   const calculate = (val) => {
-    const newScoreboard = { ...scoreboard };
-    players.forEach((player) => {
-      const bet = bets[player];
-      var done = val[player];
+    setScoreboard((prevScoreboard) => {
+      const nextScoreboard = { ...prevScoreboard };
+      players.forEach((player) => {
+        const bet = bets[player];
+        var done = val[player];
 
-      console.log("("+round+") "+"bet : "+bet+" done : "+done);
-      if (bet == done) {
-        if (bet == 0 && done == 0) {
-          done = 1;
+        console.log("("+round+") "+"bet : "+bet+" done : "+done);
+        if (bet == done) {
+          if (bet == 0 && done == 0) {
+            done = 1;
+          }
+          nextScoreboard[player] = (nextScoreboard[player] || 0) + 10 * round * done ;
+          console.log("("+round+") "+player+" (+) : "+nextScoreboard[player]);
+        } else {
+          if (done == 0) {
+            done = 1;
+          }
+          nextScoreboard[player] = (nextScoreboard[player] || 0) - 10 * round * done ;
+          console.log("("+round+") "+player + " (-) : "+nextScoreboard[player]);
         }
-        newScoreboard[player] += 10 * round * done ;
-        console.log("("+round+") "+player+" (+) : "+newScoreboard[player]);
-      } else {
-        if (done == 0) {
-          done = 1;
-        }
-        newScoreboard[player] -= 10 * round * done ;
-        console.log("("+round+") "+player + " (-) : "+newScoreboard[player]);
-      }
-    });
+      });
     
-    setScoreboard(newScoreboard);
+      return nextScoreboard;
+    });
   };
 
   const nextRound = () => {
