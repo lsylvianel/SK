@@ -92,28 +92,34 @@ function Round({ players }) {
         Manche {round}
       </Typography>
 
-      {/* Les résultats globaux */}
+      {/* Game results */}
       <Paper elevation={3} sx={{ mt: 3 }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Joueur</TableCell>
-              <TableCell align="right">Score Total</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {players.map((p) => (
-              <TableRow key={p}>
-                <TableCell>{p}</TableCell>
-                <TableCell align="right">{scoreboard[p]}</TableCell>
-              </TableRow>
+      <Table>
+        <TableHead>
+          <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
+            {/* On boucle pour créer les en-têtes avec les noms */}
+            {players.map((player) => (
+              <TableCell key={player} align="center" sx={{ fontWeight: 'bold' }}>
+                {player}
+              </TableCell>
             ))}
-          </TableBody>
-        </Table>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            {/* On boucle pour afficher le score correspondant à chaque nom */}
+            {players.map((player) => (
+              <TableCell key={player} align="center">
+                {scoreboard[player] || 0}
+              </TableCell>
+            ))}
+          </TableRow>
+        </TableBody>
+      </Table>
       </Paper>
 
       <Typography gutterBottom align="center">
-        <br />{step === 'bet' ? "Contrat" : "Résultats"}
+        <br />{step === 'bet' ? "Contrats" : "Résultats"}
       </Typography>
 
       {/* On boucle sur les joueurs pour afficher les spinners */}

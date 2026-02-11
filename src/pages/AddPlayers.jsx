@@ -3,27 +3,33 @@ import { Container, TextField, Button, List, ListItem, ListItemText, IconButton,
 import { Link } from 'react-router-dom';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import CloseIcon from '@mui/icons-material/Close';
 
 function AddPlayers({ players, setPlayers }) {
+  const MAX_PLAYERS = 8;
   const [name, setName] = useState('');
 
   const addPlayer = () => {
     if (name.trim() !== "") {
       setPlayers([...players, name]);
       setName(''); // Clear the new field
-      // only 8 players max
-      // possibility to delete a player
     }
   };
+
+  const deletePlayer = (indexToDelete) => {
+    const updatedPlayers = players.filter((_, index) => index !== indexToDelete);
+    setPlayers(updatedPlayers);
+  }
 
   return (
     <Container sx={{ mt: 5 }}>
       <Stack direction="row" spacing={2}>
         <TextField 
-          label="Nom du joueur" 
+          label={players.length >= MAX_PLAYERS ? "Maximum atteint" : "Nom du joueur"} 
           variant="outlined" 
           fullWidth 
           value={name}
+          disabled={players.length >= MAX_PLAYERS}
           onChange={(e) => setName(e.target.value)}
           onKeyPress={(e) => e.key === 'Enter' && addPlayer()}
         />
@@ -40,6 +46,14 @@ function AddPlayers({ players, setPlayers }) {
         {players.map((p, index) => (
           <ListItem key={index} divider>
             <ListItemText primary={p} />
+              <IconButton 
+                edge="end" 
+                aria-label="delete" 
+                onClick={() => deletePlayer(index)} // Utilise une fonction fléchée ici
+                color="error"
+                >
+              <CloseIcon />
+            </IconButton>
           </ListItem>
         ))}
       </List>
