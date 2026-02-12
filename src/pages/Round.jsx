@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Container, Typography, Button, Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom'; // to go back = TGB
-import { IconButton, Box } from '@mui/material';
+import { Box } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import NumberSpinner from '../components/NumberSpinner';
 
-function Round({ players , scoreboard, setScoreboard}) {
+function Round({ players, scoreboard, setScoreboard}) {
+  const MAX_ROUND = 2; //10;
   const navigate = useNavigate(); // TGB
 
   const [round, setRound] = useState(1); // round 1, 2 ...10
@@ -69,7 +70,7 @@ function Round({ players , scoreboard, setScoreboard}) {
   };
 
   const nextRound = () => {
-    if (round < 10) {
+    if (round < MAX_ROUND) {
       setRound(round + 1);
       setStep('bet');
     } else {
@@ -82,7 +83,8 @@ function Round({ players , scoreboard, setScoreboard}) {
       {/* Button to go back */}
       <Button 
         startIcon={<ArrowBackIcon />} 
-        onClick={() => navigate(-1)}
+        to="/players"
+        onClick={() => navigate('/players')}
         sx={{ mb: 2 }}
       >
       Retour

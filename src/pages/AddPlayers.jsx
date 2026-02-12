@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { Container, TextField, Button, List, ListItem, ListItemText, IconButton, Stack } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // to go back = TGB
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import CloseIcon from '@mui/icons-material/Close';
 
 function AddPlayers({ players, setPlayers }) {
+  const navigate = useNavigate(); // TGB
   const MAX_PLAYERS = 8;
   const [name, setName] = useState('');
 
@@ -23,6 +26,15 @@ function AddPlayers({ players, setPlayers }) {
 
   return (
     <Container sx={{ mt: 5 }}>
+      {/* Button to go back */}
+      <Button 
+        startIcon={<ArrowBackIcon />} 
+        onClick={() => navigate('/start')}
+        sx={{ mb: 2 }}
+      >
+      Retour
+      </Button>
+
       <Stack direction="row" spacing={2}>
         <TextField 
           label={players.length >= MAX_PLAYERS ? "Maximum atteint" : "Nom du joueur"} 
