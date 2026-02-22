@@ -10,14 +10,14 @@ function EndGame({ players, scoreboard }) {
   }))
   .sort((a, b) => b.score - a.score);
 
-  const resetGame = (players = false, keepPlayers = false) => {
-    setScoreboard({});
-    setPlayers(players);
+  // const resetGame = (players = false, keepPlayers = false) => {
+  //   setScoreboard({});
+  //   setPlayers(players);
     
-    if (!keepPlayers) {
-      setPlayers([]);
-    }
-  };
+  //   if (!keepPlayers) {
+  //     setPlayers([]);
+  //   }
+  // };
 
   return (    
     <Container sx={{ textAlign: 'center', mt: 10 }}>
@@ -52,7 +52,7 @@ function EndGame({ players, scoreboard }) {
       <Button 
         variant="contained" component={Link}
         to="/round"
-        onClick={() => resetGame(players, false)}
+        //onClick={() => resetGame(players, false)}
         fullWidth 
       >
         Rejouer
@@ -60,7 +60,7 @@ function EndGame({ players, scoreboard }) {
       <Button 
         variant="contained" component={Link}
         to="/start"
-        onClick={() => resetGame(true)}
+        //onClick={() => resetGame(true)}
         fullWidth 
       >
         Quitter
