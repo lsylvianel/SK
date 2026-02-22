@@ -4,6 +4,8 @@ node-v24.13.0-win-x64.zip
 node-v24.13.0-win-x64.zip/*
 node_modules/*
 
+dist
+
 Test.html
 V1_App.jpg
 V1_Start.jpg

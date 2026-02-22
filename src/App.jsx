@@ -17,7 +17,7 @@ function App() {
   />
 
   return (
-    <Router>
+    <Router basename="/SK">
         <Routes>
            <Route path="/"  element={<StartGame />} />
            <Route path="/players"  element={<AddPlayers players={players} setPlayers={setPlayers} />} />
