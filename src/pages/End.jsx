@@ -10,6 +10,15 @@ function EndGame({ players, scoreboard }) {
   }))
   .sort((a, b) => b.score - a.score);
 
+  const resetGame = (players = false, keepPlayers = false) => {
+    setScoreboard({});
+    setPlayers(players);
+    
+    if (!keepPlayers) {
+      setPlayers([]);
+    }
+  };
+
   return (    
     <Container sx={{ textAlign: 'center', mt: 10 }}>
       {/* Game ranking */}
@@ -25,7 +34,6 @@ function EndGame({ players, scoreboard }) {
           <TableBody>
             {rankedPlayers.map((player, index) => (
               <TableRow key={player.name}>
-                {/* Le rang est l'index + 1 */}
                 <TableCell align="center">
                   {index === 0 ? "🥇 1e" : index === 1 ? "🥈 2e" : index === 2 ? "🥉 3e" : index + 1 + "e"}
                 </TableCell>
@@ -43,7 +51,16 @@ function EndGame({ players, scoreboard }) {
 
       <Button 
         variant="contained" component={Link}
+        to="/round"
+        onClick={() => resetGame(players, false)}
+        fullWidth 
+      >
+        Rejouer
+      </Button>
+      <Button 
+        variant="contained" component={Link}
         to="/start"
+        onClick={() => resetGame(true)}
         fullWidth 
       >
         Quitter
