@@ -6,7 +6,7 @@ import Paper from '@mui/material/Paper';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 
-function NumberSpinner({ label, value, bet, step, onChange }) {
+function NumberSpinner({ label, value, bet, step, round, onChange }) {
   return (
     <Paper elevation={1} sx={{ p: 2, mb: 2, borderRadius: 2 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -21,7 +21,7 @@ function NumberSpinner({ label, value, bet, step, onChange }) {
           )}
         </Typography>
         
-        {/* */}
+        {/* Spinner */}
         <Box sx={{ 
           display: 'flex', 
           alignItems: 'center', 
@@ -43,7 +43,7 @@ function NumberSpinner({ label, value, bet, step, onChange }) {
 
           <IconButton 
             onClick={() => onChange(value + 1)} 
-            disabled={value >= 9}
+            disabled={value >= round}
             color="primary"
             size="small"
           >

@@ -6,7 +6,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import NumberSpinner from '../components/NumberSpinner';
 
 function Round({ players, scoreboard, setScoreboard}) {
-  const MAX_ROUND = 2; //10;
+  const MAX_ROUND = 10;
   const navigate = useNavigate(); // TGB
 
   const [round, setRound] = useState(1); // round 1, 2 ...10
@@ -124,7 +124,7 @@ function Round({ players, scoreboard, setScoreboard}) {
         <br />{step === 'bet' ? "Contrats" : "Résultats"}
       </Typography>
 
-      {/* On boucle sur les joueurs pour afficher les spinners */}
+      {/* Display spinner for each player */}
     <Box sx={{ my: 3 }}>
       {players.map((player) => (
         <NumberSpinner 
@@ -133,6 +133,7 @@ function Round({ players, scoreboard, setScoreboard}) {
           value={values[player] || 0}
           bet={bets[player] || 0}
           step={step}
+          round={round}
           onChange={(val) => validateValues(player, val) }
         />
       ))}
