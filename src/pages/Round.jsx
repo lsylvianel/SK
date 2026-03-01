@@ -3,6 +3,7 @@ import { Container, Typography, Button, Table, TableBody, TableCell, TableHead, 
 import { useNavigate } from 'react-router-dom'; // to go back = TGB
 import { Box } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import CancelIcon from '@mui/icons-material/Cancel';
 import NumberSpinner from '../components/NumberSpinner';
 
 function Round({ players, scoreboard, setScoreboard}) {
@@ -80,15 +81,24 @@ function Round({ players, scoreboard, setScoreboard}) {
 
   return (
     <Container sx={{ mt: 5 }}>
-      {/* Button to go back */}
-      <Button 
-        startIcon={<ArrowBackIcon />} 
-        to="/players"
-        onClick={() => navigate('/players')}
-        sx={{ mb: 2 }}
-      >
-      Retour
-      </Button>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+        {/* Go back */}
+        <Button 
+          startIcon={<ArrowBackIcon />} 
+          onClick={() => navigate('/players')}
+          sx={{ mb: 2 }}
+        >
+        Retour
+        </Button>
+
+        {/* Cancel game */}
+        <Button
+          startIcon={<CancelIcon />} 
+          onClick={() => navigate('/End')}
+          sx={{ mb: 2 }}
+        >
+        </Button>
+      </Box>
 
       <Typography variant="h4" align="center" gutterBottom>
         Manche {round}

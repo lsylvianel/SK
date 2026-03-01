@@ -75,8 +75,7 @@ function AddPlayers({ players, setPlayers }) {
         <Button 
           variant="contained" 
           color="success"
-          component={Link} 
-          to="/round"
+          component={Link} to="/round"
           disabled={players.length < MIN_PLAYERS}
           startIcon={<PlayArrowIcon />}
           sx={{ mt: 4 }}

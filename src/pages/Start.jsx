@@ -12,8 +12,8 @@ function StartGame() {
       {/* Use button from material UI */}
       <Stack spacing={2} sx={{ mt: 4 }}>
         <Button 
-          variant="contained" component={Link} 
-          to="/players" 
+          variant="contained" 
+          component={Link} to="/players" 
           size="large"
         >
           Règles classiques

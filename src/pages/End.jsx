@@ -2,22 +2,13 @@ import React, { useState } from 'react';
 import { Container, Button, Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@mui/material';
 import  { Link } from 'react-router-dom'
 
-function EndGame({ players, scoreboard }) {
+function EndGame({ players, scoreboard, playAgain }) {
   const rankedPlayers = players
   .map(name => ({
     name: name,
     score: scoreboard[name] || 0
   }))
   .sort((a, b) => b.score - a.score);
-
-  const playAgain = (keepPlayers) => {
-    players.forEach((player) => scoreboard[player] = 0);
-
-    if (!keepPlayers) {
-      players.forEach((player) => player.name = '');
-    }
-    localStorage.clear();
-  };
 
   return (    
     <Container sx={{ textAlign: 'center', mt: 10 }}>
@@ -50,16 +41,16 @@ function EndGame({ players, scoreboard }) {
       </Paper>
 
       <Button 
-        variant="contained" component={Link}
-        to="/round"
+        variant="contained" 
+        component={Link} to="/round"
         onClick={() => playAgain(true)}
         fullWidth 
       >
         Rejouer
       </Button>
       <Button 
-        variant="contained" component={Link}
-        to="/start"
+        variant="contained" 
+        component={Link} to="/start"
         onClick={() => playAgain(false)}
         fullWidth 
       >

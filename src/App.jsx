@@ -28,6 +28,24 @@ function App() {
     setScoreboard={setScoreboard}
   />
 
+  const playAgain = (keepPlayers) => {
+    const newScoreboard = players.reduce((acc, name) => {
+      acc[name] = 0;
+      return acc;
+    }, {});
+
+    const newPlayers = keepPlayers ? [...players] : [];
+
+    setScoreboard(newScoreboard);
+    setPlayers(newPlayers);
+  
+    if (!keepPlayers) {
+      localStorage.clear();
+    } else {
+      localStorage.setItem('stored_scoreboard', JSON.stringify(newScoreboard));
+    }
+  };
+
   return (
     <Router basename="/SK">
         <Routes>
@@ -35,7 +53,7 @@ function App() {
            <Route path="/players"  element={<AddPlayers players={players} setPlayers={setPlayers} />} />
            <Route path="/round"  element={<Round players={players} scoreboard={scoreboard} setScoreboard={setScoreboard} />} />
            <Route path="/start"  element={<StartGame />} />
-           <Route path="/end"  element={<EndGame players={players} scoreboard={scoreboard} />} />
+           <Route path="/end"  element={<EndGame players={players} scoreboard={scoreboard} playAgain={playAgain}/>} />
         </Routes>
     </Router>
   );
