@@ -9,6 +9,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 function AddPlayers({ players, setPlayers }) {
   const navigate = useNavigate(); // TGB
+  const MIN_PLAYERS = 2;
   const MAX_PLAYERS = 8;
   const [name, setName] = useState('');
 
@@ -61,7 +62,7 @@ function AddPlayers({ players, setPlayers }) {
               <IconButton 
                 edge="end" 
                 aria-label="delete" 
-                onClick={() => deletePlayer(index)} // Utilise une fonction fléchée ici
+                onClick={() => deletePlayer(index)}
                 color="error"
                 >
               <CloseIcon />
@@ -76,6 +77,7 @@ function AddPlayers({ players, setPlayers }) {
           color="success"
           component={Link} 
           to="/round"
+          disabled={players.length < MIN_PLAYERS}
           startIcon={<PlayArrowIcon />}
           sx={{ mt: 4 }}
         >
