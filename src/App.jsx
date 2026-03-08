@@ -35,19 +35,19 @@ function App() {
   />
 
   const playAgain = (keepPlayers) => {
-    const newScoreboard = players.reduce((acc, name) => {
-      acc[name] = 0;
-      return acc;
-    }, {});
-
-    const newPlayers = keepPlayers ? [...players] : [];
-
-    setScoreboard(newScoreboard);
-    setPlayers(newPlayers);
-  
     if (!keepPlayers) {
+      setPlayers([]);
+      setScoreboard({
+        manche: 0,
+        score: players.reduce((acc, p) => ({ ...acc, [p]: 0 }), {})
+      });
       localStorage.clear();
     } else {
+      const newScoreboard = players.reduce((acc, name) => {
+        acc[name] = 0;
+        return acc;
+      }, {});
+      setScoreboard(newScoreboard);
       localStorage.setItem('stored_scoreboard', JSON.stringify(newScoreboard));
     }
   };

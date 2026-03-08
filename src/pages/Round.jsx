@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Container, Typography, Button, Dialog, DialogTitle, DialogContent, Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom'; // to go back = TGB
 import { Box } from '@mui/material';
@@ -23,11 +23,6 @@ function Round({ players, scoreboard, setScoreboard}) {
   const resetValues = () => {
     return players.reduce((acc, p) => ({ ...acc, [p]: 0 }), {});
   };
-
-  // save scoreboard at each round
-  useEffect(() => {
-    localStorage.setItem('stored_scoreboard', JSON.stringify(scoreboard));
-  }, [scoreboard]);
 
   const validateRound = () => {
     if (step == 'bet') {
