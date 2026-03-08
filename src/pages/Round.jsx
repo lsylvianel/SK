@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Container, Typography, Button, Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@mui/material';
+import { Container, Typography, Button, Dialog, DialogTitle, DialogContent, Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom'; // to go back = TGB
 import { Box } from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CancelIcon from '@mui/icons-material/Cancel';
 import NumberSpinner from '../components/NumberSpinner';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 
 function Round({ players, scoreboard, setScoreboard}) {
   const MAX_ROUND = 10;
@@ -48,22 +48,24 @@ function Round({ players, scoreboard, setScoreboard}) {
       const nextScoreboard = { ...prevScoreboard };
       players.forEach((player) => {
         const bet = bets[player];
-        var done = val[player];
+        let done = val[player];
+        let score = 0;
 
         console.log("("+round+") "+"bet : "+bet+" done : "+done);
         if (bet == done) {
           if (bet == 0 && done == 0) {
             done = 1;
           }
-          nextScoreboard[player] = (nextScoreboard[player] || 0) + 10 * round * done ;
+          score = (nextScoreboard[player] || 0) + 10 * round * done ;
           console.log("("+round+") "+player+" (+) : "+nextScoreboard[player]);
         } else {
           if (done == 0) {
             done = 1;
           }
-          nextScoreboard[player] = (nextScoreboard[player] || 0) - 10 * round * done ;
+          score = (nextScoreboard[player] || 0) - 10 * round * done ;
           console.log("("+round+") "+player + " (-) : "+nextScoreboard[player]);
         }
+        nextScoreboard[player] = score;
       });
     
       return nextScoreboard;
@@ -79,25 +81,50 @@ function Round({ players, scoreboard, setScoreboard}) {
     }
   };
 
+  const [openCancelButton, setOpenCancelButton] = useState(false);
+  const [openScores, setOpenScores] = useState(false);
+
   return (
     <Container sx={{ mt: 5 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-        {/* Go back */}
-        <Button 
-          startIcon={<ArrowBackIcon />} 
-          onClick={() => navigate('/players')}
-          sx={{ mb: 2 }}
-        >
-        Retour
-        </Button>
-
         {/* Cancel game */}
-        <Button
-          startIcon={<CancelIcon />} 
-          onClick={() => navigate('/End')}
-          sx={{ mb: 2 }}
-        >
-        </Button>
+        <Button startIcon={<CancelIcon />} sx={{ mb: 2 }} onClick={() => setOpenCancelButton(true)}></Button>
+        <Dialog open={openCancelButton} onClose={() => setOpenCancelButton(false)}>
+          <DialogTitle>Etes-vous sûr de vouloir abandonner?</DialogTitle>
+          <DialogContent>
+            {
+              <button onClick={() => navigate('/End')}>
+                Quitter
+              </button>
+            }
+          </DialogContent>
+        </Dialog>
+
+        {/* Score grid */}
+        <Button startIcon={<FormatListBulletedIcon />} sx={{ mb: 2 }} onClick={() => setOpenScores(true)}></Button>
+        <Dialog open={openScores} onClose={() => setOpenScores(false)}>
+          <DialogTitle>Liste des scores</DialogTitle>
+          <DialogContent>
+            {
+              <Table>
+                        <TableHead>
+                          <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
+                            <TableCell align="center"><strong>Manche</strong></TableCell>
+            {/* On boucle pour créer les en-têtes avec les noms */}
+            {players.map((player) => (
+              <TableCell key={player} align="center" sx={{ fontWeight: 'bold' }}>
+                {player}
+              </TableCell>
+            ))}
+                          </TableRow>
+                        </TableHead>
+
+                        <TableBody>
+                        </TableBody>
+                      </Table>
+            }
+          </DialogContent>
+        </Dialog>
       </Box>
 
       <Typography variant="h4" align="center" gutterBottom>
