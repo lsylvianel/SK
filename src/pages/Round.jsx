@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Typography, Button, Dialog, DialogTitle, DialogContent, Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom'; // to go back = TGB
 import { Box } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import NumberSpinner from '../components/NumberSpinner';
-import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import { getTotal, ScoreModal } from './ScoreTable';
 
 function Round({ players, scoreboard, setScoreboard}) {
   const MAX_ROUND = 10;
@@ -23,6 +23,11 @@ function Round({ players, scoreboard, setScoreboard}) {
   const resetValues = () => {
     return players.reduce((acc, p) => ({ ...acc, [p]: 0 }), {});
   };
+
+  // save scoreboard at each round
+  useEffect(() => {
+    localStorage.setItem('stored_scoreboard', JSON.stringify(scoreboard));
+  }, [scoreboard]);
 
   const validateRound = () => {
     if (step == 'bet') {
@@ -44,45 +49,35 @@ function Round({ players, scoreboard, setScoreboard}) {
   }
 
   const calculate = (val) => {
-    setScoreboard((prevScoreboard) => {
-      const nextScoreboard = { ...prevScoreboard };
-      players.forEach((player) => {
-        const bet = bets[player];
-        let done = val[player];
-        let score = 0;
+    const performedScores = {};
 
-        console.log("("+round+") "+"bet : "+bet+" done : "+done);
-        if (bet == done) {
-          if (bet == 0 && done == 0) {
-            done = 1;
-          }
-          score = (nextScoreboard[player] || 0) + 10 * round * done ;
-          console.log("("+round+") "+player+" (+) : "+nextScoreboard[player]);
-        } else {
-          if (done == 0) {
-            done = 1;
-          }
-          score = (nextScoreboard[player] || 0) - 10 * round * done ;
-          console.log("("+round+") "+player + " (-) : "+nextScoreboard[player]);
-        }
-        nextScoreboard[player] = score;
-      });
-    
-      return nextScoreboard;
+    players.forEach((player) => {
+      const bet = Number(bets[player]);
+      const done = Number(val[player]);
+
+      if (bet === done) {
+        const multiplicateur = (done === 0) ? 1 : done;
+        performedScores[player] = 10 * round * multiplicateur;
+      } else {
+        const ecart = Math.abs(bet - done);
+        performedScores[player] = -10 * round * ecart;
+      }
     });
+
+    const newEntry = { manche: round, score: performedScores };
+    setScoreboard((prev) => [...prev, newEntry]);
   };
 
   const nextRound = () => {
-    if (round < MAX_ROUND) {
+    if (round == MAX_ROUND && step == "result") {
+      navigate('/end');
+    } else {
       setRound(round + 1);
       setStep('bet');
-    } else {
-      navigate('/end');
     }
   };
 
   const [openCancelButton, setOpenCancelButton] = useState(false);
-  const [openScores, setOpenScores] = useState(false);
 
   return (
     <Container sx={{ mt: 5 }}>
@@ -101,30 +96,16 @@ function Round({ players, scoreboard, setScoreboard}) {
         </Dialog>
 
         {/* Score grid */}
-        <Button startIcon={<FormatListBulletedIcon />} sx={{ mb: 2 }} onClick={() => setOpenScores(true)}></Button>
+        <ScoreModal players={players} scoreboard={scoreboard} />
+        {/* <Button startIcon={<FormatListBulletedIcon />} sx={{ mb: 2 }} onClick={() => setOpenScores(true)}></Button>
         <Dialog open={openScores} onClose={() => setOpenScores(false)}>
           <DialogTitle>Liste des scores</DialogTitle>
           <DialogContent>
             {
-              <Table>
-                        <TableHead>
-                          <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
-                            <TableCell align="center"><strong>Manche</strong></TableCell>
-            {/* On boucle pour créer les en-têtes avec les noms */}
-            {players.map((player) => (
-              <TableCell key={player} align="center" sx={{ fontWeight: 'bold' }}>
-                {player}
-              </TableCell>
-            ))}
-                          </TableRow>
-                        </TableHead>
-
-                        <TableBody>
-                        </TableBody>
-                      </Table>
+              <ScoreTable players={players} scoreboard={scoreboard} />
             }
           </DialogContent>
-        </Dialog>
+        </Dialog>*/}
       </Box>
 
       <Typography variant="h4" align="center" gutterBottom>
@@ -149,7 +130,7 @@ function Round({ players, scoreboard, setScoreboard}) {
             {/* On boucle pour afficher le score correspondant à chaque nom */}
             {players.map((player) => (
               <TableCell key={player} align="center">
-                {scoreboard[player] || 0}
+                {getTotal(player, scoreboard)}
               </TableCell>
             ))}
           </TableRow>

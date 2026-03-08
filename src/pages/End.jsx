@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
 import { Container, Button, Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@mui/material';
 import  { Link } from 'react-router-dom'
+import { getTotal, ScoreModal } from './ScoreTable'
 
 function EndGame({ players, scoreboard, playAgain }) {
-  const rankedPlayers = players
-  .map(name => ({
-    name: name,
-    score: scoreboard[name] || 0
-  }))
-  .sort((a, b) => b.score - a.score);
+  const rankedPlayers = players.map(name => ({
+                                  name: name,
+                                  score: getTotal(name, scoreboard) || 0 }))
+                                .sort((a, b) => b.score - a.score);
 
   return (    
     <Container sx={{ textAlign: 'center', mt: 10 }}>
+      <ScoreModal players={players} scoreboard={scoreboard} />
       {/* Game ranking */}
       <Paper elevation={3} sx={{ mt: 3 }}>
         <Table>

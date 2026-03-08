@@ -10,10 +10,16 @@ function App() {
     const saved = localStorage.getItem('stored_players');
     return saved ? JSON.parse(saved) : [];
   });
+  //const [players, setPlayers] = useState([]);
   
   const [scoreboard, setScoreboard] = useState(() => {
-    const saved = localStorage.getItem('stored_scoreboard');
-    return saved ? JSON.parse(saved) : players.reduce((acc, p) => ({ ...acc, [p]: 0 }), {});
+    try {
+      const saved = localStorage.getItem('stored_scoreboard');
+      const parsed = saved ? JSON.parse(saved) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      return [];
+    }
   });
 
   // write in localStorage at each modification
