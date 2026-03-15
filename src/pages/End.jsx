@@ -1,11 +1,11 @@
 import { Container, Button, Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@mui/material';
 import  { Link } from 'react-router-dom'
-import { getTotal, ScoreModal } from './ScoreTable'
+import { getScoreByRound, ScoreModal } from './ScoreTable'
 
 function EndGame({ players, scoreboard, playAgain }) {
   const rankedPlayers = players.map(name => ({
                                   name: name,
-                                  score: getTotal(name, scoreboard) || 0 }))
+                                  score: getScoreByRound(name, scoreboard) || 0 }))
                                 .sort((a, b) => b.score - a.score);
 
   return (    
