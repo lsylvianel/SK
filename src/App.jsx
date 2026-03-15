@@ -13,7 +13,6 @@ function App() {
     const saved = localStorage.getItem('stored_players');
     return saved ? JSON.parse(saved) : [];
   });
-  //const [players, setPlayers] = useState([]);
   
   const [scoreboard, setScoreboard] = useState(() => {
     try {
@@ -40,17 +39,23 @@ function App() {
   const playAgain = (keepPlayers) => {
     if (!keepPlayers) {
       setPlayers([]);
-      setScoreboard({
+      setScoreboard([{
         manche: 0,
         score: players.reduce((acc, p) => ({ ...acc, [p]: 0 }), {})
-      });
-      localStorage.clear();
+      }]);
+      
     } else {
       const newScoreboard = players.reduce((acc, name) => {
         acc[name] = 0;
         return acc;
       }, {});
-      setScoreboard(newScoreboard);
+      setScoreboard([
+        {
+          manche: 0,
+          score: newScoreboard
+        }
+      ]);
+
       localStorage.setItem('stored_scoreboard', JSON.stringify(newScoreboard));
     }
   };

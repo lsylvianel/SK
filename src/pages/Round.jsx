@@ -60,7 +60,7 @@ function Round({ players, scoreboard, setScoreboard}) {
     });
 
     const newEntry = { manche: round, score: performedScores };
-    setScoreboard((prev) => [...prev, newEntry]);
+    setScoreboard((prev) => [...(Array.isArray(prev) ? prev : []), newEntry]);
   };
 
   const nextRound = () => {
@@ -91,16 +91,7 @@ function Round({ players, scoreboard, setScoreboard}) {
         </Dialog>
 
         {/* Score grid */}
-        <ScoreModal players={players} scoreboard={scoreboard} />
-        {/* <Button startIcon={<FormatListBulletedIcon />} sx={{ mb: 2 }} onClick={() => setOpenScores(true)}></Button>
-        <Dialog open={openScores} onClose={() => setOpenScores(false)}>
-          <DialogTitle>Liste des scores</DialogTitle>
-          <DialogContent>
-            {
-              <ScoreTable players={players} scoreboard={scoreboard} />
-            }
-          </DialogContent>
-        </Dialog>*/}
+        <ScoreModal players={players} scoreboard={scoreboard}/>
       </Box>
 
       <Typography variant="h4" align="center" gutterBottom>
