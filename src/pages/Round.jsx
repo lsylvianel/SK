@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Container, Typography, Button, Dialog, DialogTitle, DialogContent, Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@mui/material';
+import { Container, Typography, Button, Dialog, DialogActions, DialogTitle, DialogContent, Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom'; // to go back = TGB
 import { Box } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import NumberSpinner from '../components/NumberSpinner';
-import { getTotal, ScoreModal } from './ScoreTable';
+import { getScoreByRound, ScoreModal } from './ScoreTable';
 
 function Round({ players, scoreboard, setScoreboard}) {
   const MAX_ROUND = 10;
@@ -83,9 +83,14 @@ function Round({ players, scoreboard, setScoreboard}) {
           <DialogTitle>Etes-vous sûr de vouloir abandonner?</DialogTitle>
           <DialogContent>
             {
-              <button onClick={() => navigate('/End')}>
-                Quitter
-              </button>
+              <DialogActions>
+              <Button onClick={() => setOpenCancelButton(false)}>
+                Non
+              </Button>  
+              <Button variant="outlined" onClick={() => navigate('/End')}>
+                Oui
+              </Button>
+              </DialogActions>
             }
           </DialogContent>
         </Dialog>
@@ -113,10 +118,9 @@ function Round({ players, scoreboard, setScoreboard}) {
         </TableHead>
         <TableBody>
           <TableRow>
-            {/* On boucle pour afficher le score correspondant à chaque nom */}
             {players.map((player) => (
               <TableCell key={player} align="center">
-                {getTotal(player, scoreboard)}
+                {getScoreByRound(player, scoreboard)}
               </TableCell>
             ))}
           </TableRow>

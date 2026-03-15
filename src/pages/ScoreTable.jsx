@@ -1,8 +1,8 @@
-import { Button, Dialog, DialogTitle, DialogContent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogTitle, DialogContent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { useState } from 'react';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 
-export const getTotal = (player, scoreboard) => {
+export const getScoreByRound = (player, scoreboard) => {
   if (!Array.isArray(scoreboard)) return 0;
   return scoreboard.reduce((acc, row) => acc + (row.score[player] || 0), 0);
 };
@@ -17,7 +17,9 @@ export const ScoreModal = ({ players, scoreboard }) => {
         <DialogTitle>Historique des manches</DialogTitle>
         <DialogContent>
             <ScoreTable players={players} scoreboard={scoreboard} />
-            <Button onClick={() => setOpen(false)}>Fermer</Button>
+            <DialogActions>
+              <Button onClick={() => setOpen(false)}>Fermer</Button>
+            </DialogActions>
         </DialogContent>
       </Dialog>
     </>

@@ -49,13 +49,7 @@ function App() {
         acc[name] = 0;
         return acc;
       }, {});
-      setScoreboard([
-        {
-          manche: 0,
-          score: newScoreboard
-        }
-      ]);
-
+      setScoreboard([ {manche: 0, score: newScoreboard} ]);
       localStorage.setItem('stored_scoreboard', JSON.stringify(newScoreboard));
     }
   };
