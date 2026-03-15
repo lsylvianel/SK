@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import theme from './styles/theme';
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import StartGame from './pages/Start';
 import AddPlayers from './pages/AddPlayers';
@@ -53,15 +56,20 @@ function App() {
   };
 
   return (
-    <Router basename="/SK">
-        <Routes>
-           <Route path="/"  element={<StartGame />} />
-           <Route path="/players"  element={<AddPlayers players={players} setPlayers={setPlayers} />} />
-           <Route path="/round"  element={<Round players={players} scoreboard={scoreboard} setScoreboard={setScoreboard} />} />
-           <Route path="/start"  element={<StartGame />} />
-           <Route path="/end"  element={<EndGame players={players} scoreboard={scoreboard} playAgain={playAgain}/>} />
-        </Routes>
-    </Router>
+    <ThemeProvider theme={theme}>
+      {/* CssBaseline réinitialise les marges du navigateur pour correspondre au thème */}
+      <CssBaseline />
+
+      <Router basename="/SK">
+          <Routes>
+            <Route path="/"  element={<StartGame />} />
+            <Route path="/players"  element={<AddPlayers players={players} setPlayers={setPlayers} />} />
+            <Route path="/round"  element={<Round players={players} scoreboard={scoreboard} setScoreboard={setScoreboard} />} />
+            <Route path="/start"  element={<StartGame />} />
+            <Route path="/end"  element={<EndGame players={players} scoreboard={scoreboard} playAgain={playAgain}/>} />
+          </Routes>
+      </Router>
+    </ThemeProvider>
   );
 }
 
